@@ -3,8 +3,8 @@ function App() {
 
   return (
     <>
-      <div className="w-full h-full grid place-items-center">
-          <p>Hello world</p>
+      <div className="w-full h-screen grid place-items-center">
+          <p>Hello world!</p>
       </div>
     </>
   )
