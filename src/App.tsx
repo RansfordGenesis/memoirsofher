@@ -1,11 +1,8 @@
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/index.tsx";
+
 function App() {
-  return (
-    <>
-      <div className="w-full h-screen grid place-items-center">
-        <p>Hello world!</p>
-      </div>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
