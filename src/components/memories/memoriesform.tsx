@@ -1,5 +1,5 @@
 import { Memory } from "@/lib/schemas";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import SingleFileInput from "../singleImagepicker";
 import {
     Card,
@@ -27,6 +27,8 @@ import {   Select,
   SelectLabel,
   SelectTrigger,
   SelectValue, } from "../ui/select";
+import { Badge } from "../ui/badge";
+import { Checkbox } from "../ui/checkbox";
 
 
 export default function MemoriesForm() {
@@ -39,6 +41,28 @@ export default function MemoriesForm() {
       },
   });
 
+  const fruits = [
+    { label: "Apple", value: "apple" },
+    { label: "Banana", value: "banana" },
+    { label: "Blueberry", value: "blueberry" },
+    { label: "Grapes", value: "grapes" },
+    { label: "Pineapple", value: "pineapple" },
+  ];
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "tags",
+  });
+
+  const handleCheckboxChange = (checked: boolean, value: string) => {
+    if (checked) {
+      append({ value });
+    } else {
+      const index = fields.findIndex((field) => field.value === value);
+      if (index !== -1) {
+        remove(index);
+      }
+    }
+  };
   return (
       <Card className="p-5">
           <CardHeader>
@@ -77,37 +101,56 @@ export default function MemoriesForm() {
                                   </FormItem>
                               )}
                           />
-                          <FormField
-                              control={form.control}
-                              name="tags"
-                              render={() => (
-                                  <FormItem>
-                                      <FormLabel>Tags</FormLabel>
-                                      <FormControl>
-                                      <Select>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a fruit" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Fruits</SelectLabel>
-          <SelectItem value="apple">Apple</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-                                      </FormControl>
-                                      <FormDescription />
-                                      <FormMessage />
-                                  </FormItem>
-                              )}
-                          />
+                      <FormField
+      control={form.control}
+      name="tags"
+      render={() => (
+        <FormItem className="w-full">
+          <FormLabel>Tags</FormLabel>
+          <FormControl>
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select fruits" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Fruits</SelectLabel>
+                  {fruits.map((fruit) => (
+                    <div key={fruit.value} className="flex items-center space-x-2 p-2">
+                      <Checkbox
+                        checked={fields.some((field) => field.value === fruit.value)}
+                        onCheckedChange={(checked) => 
+                          handleCheckboxChange(checked as boolean, fruit.value)
+                        }
+                      />
+                      <span>{fruit.label}</span>
+                    </div>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {fields.map((field, index) => (
+              <Badge 
+                key={field.id}
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => remove(index)}
+              >
+                {fruits.find(f => f.value === field.value)?.label}
+                <span className="ml-1">×</span>
+              </Badge>
+            ))}
+          </div>
+          <FormDescription>Select multiple fruits using checkboxes</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
                       </div>
 
-                      {/* Right Column */}
+               
                       <div>
                           <Label className="text-white">Upload Flyer Image</Label>
                           <FormField
@@ -129,18 +172,3 @@ export default function MemoriesForm() {
   );
 }
 
-/*
-    <div>
-    <Label className=" text-white">Upload Flyer Image</Label>
-                <FormField
-                    control={form.control}
-                    name="imageUrl"
-                    render={({ field, fieldState }) => (
-                        <SingleFileInput 
-                          field={field}
-                          error={fieldState.error}
-                          onChange={(file, base64) => field.onChange(base64)}
-                        />
-                      )}
-                />
-    </div>*/
