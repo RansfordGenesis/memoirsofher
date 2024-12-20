@@ -8,3 +8,16 @@ export const variable = {
   project_url: env.VITE_PROJ_URL,
   api_key: env.VITE_API_KEY,
 };
+
+export function splitArrayRoundRobin<T>(
+  longArray: T[],
+  numberOfChunks: number
+): T[][] {
+  const result: T[][] = Array.from({ length: numberOfChunks }, () => []);
+
+  for (let i = 0; i < longArray.length; i++) {
+    result[i % numberOfChunks].push(longArray[i]);
+  }
+
+  return result;
+}
