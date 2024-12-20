@@ -7,6 +7,7 @@ export { default as wrapOnchange } from "./wrap-onchange";
 export const variable = {
   project_url: env.VITE_PROJ_URL,
   api_key: env.VITE_API_KEY,
+  access_code: env.VITE_ACCESS_CODE,
 };
 
 export function splitArrayRoundRobin<T>(
