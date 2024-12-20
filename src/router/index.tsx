@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../pages/Home";
 import MemoriesPage from "../pages/Memories";
 import ShareMemory from "../pages/share-memory";
+import AccessPage from "../pages/Access";
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
   {
     path: "memories",
     element: <MemoriesPage />,
+  },
+  {
+    path: "access",
+    element: <AccessPage />,
   },
   {
     path: "*",
