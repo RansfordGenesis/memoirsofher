@@ -1,8 +1,9 @@
 import { supabaseClient } from "@/lib/supabase";
 import MemoryCard from "../components/memory-card";
 import { useEffect, useState } from "react";
-import { cn, splitArrayRoundRobin, wrapClick } from "@/utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import { splitArrayRoundRobin } from "@/utils";
+// import { useLocation, useNavigate } from "react-router-dom";
+import NavBar from "@/components/shared/nav";
 
 const MemoriesPage = () => {
   const [data, setData] = useState<any[]>([]);
@@ -13,7 +14,8 @@ const MemoriesPage = () => {
 
     const { data: Memories, error } = await supabaseClient
       .from("memory")
-      .select();
+      .select()
+      .order("created_at", { ascending: false });
 
     if (data && !error) {
       setLoading(false);
@@ -24,74 +26,34 @@ const MemoriesPage = () => {
   useEffect(() => {
     fetchAllMemories();
   }, []);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { pathname } = useLocation();
-  const other_pages = [
-    {
-      link: "/memories",
-      title: "Memories",
-    },
-    {
-      link: "/home",
-      title: "Home",
-    },
-    // {
-    //   link: "/gallery",
-    //   title: "Gallery",
-    // },
-    {
-      link: "/share-memory",
-      title: "Share a memory",
-    },
-  ];
+  // const { pathname } = useLocation();
+  // const other_pages = [
+  //   {
+  //     link: "/memories",
+  //     title: "Memories",
+  //   },
+  //   {
+  //     link: "/home",
+  //     title: "Home",
+  //   },
+  //   {
+  //     link: "/gallery",
+  //     title: "Gallery",
+  //   },
+  //   {
+  //     link: "/share-memory",
+  //     title: "Share a memory",
+  //   },
+  // ];
   return (
-    <div className=" p-4 lg:mx-auto">
-      <div>
-        <nav className=" flex items-center justify-center gap-4 pt-6 ">
-          {other_pages?.map((page) => {
-            return (
-              <div
-                className={cn(
-                  "lg:text-[1.6rem] text-[0.95rem] cursor-pointer font-extralight border-b-2  duration-700 px-2 lg:px-4",
-                  pathname == page.link ? "border-b-black" : "",
-                  "hover:border-b-black text-black border-transparent"
-                )}
-                key={page.title}
-              >
-                <p
-                  role="link"
-                  onClick={wrapClick(() => {
-                    navigate(page.link);
-                  })}
-                  className=""
-                >
-                  {page.title}
-                </p>
-              </div>
-            );
-          })}
-{/* 
-<div
-            className={cn(
-              "lg:text-[1.6rem] text-[0.95rem] cursor-pointer font-extralight border-b-2  duration-700 px-2 lg:px-4",
-              pathname == "/share-memory" ? "border-b-black" : "",
-              "hover:border-b-black text-black border-transparent"
-            )}
-          >
-            <p
-              role="link"
-              onClick={wrapClick(() => {
-                navigate("/share-memory");
-              })}
-              className=""
-            >
-              Share a Memory
-            </p>
-          </div> */}
-        </nav>
-      </div>
-      <h4 className="text-center font-cursive lg:text-[4.8rem] text-[2.3rem] my-4">
+    <div className=" px-4 lg:mx-auto relative  pb-10 ">
+      <NavBar
+        linkClass="hover:border-b-black text-black border-transparent"
+        undelinecolor="border-b-black"
+      />
+      <h4 className="text-center font-cursive lg:text-[4.8rem] text-[2.3rem] mb-4 pt-[4.5rem] ">
         Memory Wall
       </h4>
 
@@ -132,7 +94,7 @@ const MemoriesPage = () => {
                     return (
                       <MemoryCard
                         key={cardData?.imgUrl}
-                        tags={[cardData?.tags]}
+                        tags={cardData?.tags}
                         title={cardData?.title}
                         message={cardData?.message}
                         imageUrl={cardData?.imgUrl}

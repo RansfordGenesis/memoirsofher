@@ -8,7 +8,7 @@ const HomePage = () => {
     <div className="h-screen w-screen bg-black relative overflow-clip grid place-content-center">
       <NavBar />
       <div className="w-full h-full absolute left-0 right-0 top-0 grid place-content-center z-0">
-        <div className="w-full h-full bg-black/[0.72] absolute left-0 right-0 top-0 backdrop-blur-[2px]"></div>
+        <div className="w-full h-full bg-black/[0.6] absolute left-0 right-0 top-0 backdrop-blur-[2px]"></div>
         <img
           src="/images/jojo.jpeg"
           alt="jojo"
