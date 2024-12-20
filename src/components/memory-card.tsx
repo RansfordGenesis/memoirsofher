@@ -21,7 +21,7 @@ const MemoryCard = ({
         className="w-full  rounded-t-xl aspect-auto object-cover"
         skeletonclassname={`h-[${
           Math.floor(Math.random() * (600 - 200 + 1)) + 200
-        }]`}
+        }px]`}
       />
       <div className="border-black/10 border-[1.2px]   rounded-b-xl shadow-sm px-3 py-2">
         <p className="text-[0.86rem] text-black/50 font-normal ">{author}</p>
@@ -34,7 +34,10 @@ const MemoryCard = ({
           {tags
             ?.filter((tag) => tag.trim() != "")
             ?.map((tag) => (
-              <p key={tag} className="text-black/80 text-[0.85rem] font-thin ">
+              <p
+                key={`${tag}-${author}`}
+                className="text-black/80 text-[0.85rem] font-thin "
+              >
                 #{tag}
               </p>
             ))}

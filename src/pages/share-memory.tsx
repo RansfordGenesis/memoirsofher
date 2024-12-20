@@ -5,22 +5,23 @@ import { useFormik } from "formik";
 import { supabaseClient } from "@/lib/supabase";
 import React, { ChangeEvent } from "react";
 import { v4 as uuidv4 } from "uuid";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import MultipleSelector from "@/components/ui/multi-select";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().optional(),
   title: Yup.string().required(),
   message: Yup.string().required(),
-  tags: Yup.string().required(),
+  tags: Yup.array(Yup.string()).min(1),
 });
 const ShareMemory = () => {
   const navigate = useNavigate();
@@ -31,12 +32,17 @@ const ShareMemory = () => {
     setSelectedFile(file);
   };
 
-  const { ...form } = useFormik({
+  const { ...form } = useFormik<{
+    name: string;
+    title: string;
+    message: string;
+    tags: string[];
+  }>({
     initialValues: {
       name: "",
       title: "",
       message: "",
-      tags: "",
+      tags: [],
     },
     validationSchema: ValidationSchema,
     validateOnMount: false,
@@ -73,10 +79,13 @@ const ShareMemory = () => {
   });
 
   return (
-    <div className="h-screen w-screen relative overflow-clip grid place-content-center ">
-      <NavBar linkClass="hover:border-b-black text-black border-transparent" />
-      <div className="w-full h-full absolute left-0 right-0 top-0 grid lg:place-content-center   z-0">
-        <div className="w-full h-full bg-white/[0.87] absolute left-0 right-0 top-0 backdrop-blur-[2px]"></div>
+    <div className="lg:h-screen w-screen relative lg:overflow-clip overflow-x-clip overflow-y-scroll pb-[4rem] grid place-content-center  ">
+      <NavBar
+        linkClass="hover:border-b-black text-black border-transparent z-[100]"
+        undelinecolor="border-b-black"
+      />
+      <div className="w-full h-full absolute left-0 right-0 top-0 grid lg:place-content-center z-0">
+        <div className="w-full h-full bg-white/[0.5] absolute left-0 right-0 top-0 backdrop-blur-[2px]"></div>
         <img
           src="/images/no-bg.png"
           alt="jojo"
@@ -84,8 +93,8 @@ const ShareMemory = () => {
         />
       </div>
 
-      <div className="text-black z-50 flex items-center justify-center flex-col px-4 lg:px-2 lg:gap-5 gap-4 ">
-        <p className="font-cursive font-extralight text-[2.4rem] lg:text-[5rem] text-center ">
+      <div className="text-black z-50 flex items-center justify-center flex-col px-4 lg:px-2 lg:gap-5 gap-4 mt-[5rem] mb-10 ">
+        <p className="font-cursive font-extralight text-[2.4rem] lg:text-[5rem] text-center  ">
           Share A Memory.
         </p>
         <div className="lg:bg-white/80 bg-white/60 rounded-lg p-4 lg:w-[30rem] w-full shadow-xl">
@@ -149,21 +158,25 @@ const ShareMemory = () => {
                       <p className="font-extralight text-black/60 text-[0.87rem] mb-2">
                         {field.label}
                       </p>
-
-                      <Select
-                        onValueChange={(value) => {
-                          form.setFieldValue(id, value);
+                      <MultipleSelector
+                        className="bg-white"
+                        value={form.values.tags?.map((opt) => ({
+                          label: opt,
+                          value: opt,
+                        }))}
+                        onChange={(values) => {
+                          form.setFieldValue(
+                            id,
+                            values?.map((v) => v.label)
+                          );
                         }}
-                      >
-                        <SelectTrigger className="bg-white">
-                          <SelectValue placeholder={field.placeholder} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {field.options?.map((option) => (
-                            <SelectItem value={option}>{option}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        hidePlaceholderWhenSelected
+                        placeholder="e.g. knust"
+                        defaultOptions={field.options?.map((opt) => ({
+                          label: opt,
+                          value: opt,
+                        }))}
+                      />
                       {form.touched[id] && form.errors[id] && (
                         <p className="font-thin text-[0.75rem] text-red-700">
                           {form.errors[id]}
