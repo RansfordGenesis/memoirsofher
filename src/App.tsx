@@ -1,9 +1,11 @@
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/index.tsx";
+import { Toaster } from "sonner";
 function App() {
   return (
     <>
-      <div className="w-full h-screen grid place-items-center">
-        <p>Hello world!</p>
-      </div>
+      <RouterProvider router={router} />
+      <Toaster  position="top-center"/>
     </>
   );
 }

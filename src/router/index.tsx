@@ -1,30 +1,23 @@
 import { createBrowserRouter } from "react-router-dom";
-import AuthLayout from "../layouts/auth/Auth.layout";
-import Signin from "../pages/auth/Signin";
-import Signup from "../pages/auth/Signup";
-import App from "../App";
-import { default as MainApp } from "../pages/app/App";
+import HomePage from "../pages/Home";
+import MemoriesPage from "../pages/Memories";
+import ShareMemory from "../pages/share-memory";
+
 export const router = createBrowserRouter([
   {
-    path: "/auth/",
-    element: <AuthLayout />,
-    children: [
-      {
-        path: "login",
-        element: <Signin />,
-      },
-      {
-        path: "register",
-        element: <Signup />,
-      },
-    ],
+    path: "",
+    element: <HomePage />,
   },
   {
-    path: "/",
-    element: <App />,
+    path: "share-memory",
+    element: <ShareMemory />,
   },
   {
-    path: "/dashboard",
-    element: <MainApp />,
+    path: "memories",
+    element: <MemoriesPage />,
+  },
+  {
+    path: "*",
+    element: <HomePage />,
   },
 ]);
