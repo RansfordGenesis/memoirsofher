@@ -27,7 +27,7 @@ const HomePage = () => {
           className="cursor-pointer w-fit font-extralight uppercase border-[0.9px] border-[#ffffff] lg:p-6 lg:text-[1.4rem] text-[0.9rem] p-3 hover:bg-white hover:text-black duration-700  "
           role="link"
           onClick={wrapClick(() => {
-            navigate("/memories");
+            navigate("/share-memory");
           })}
         >
           <p> Share memory</p>
