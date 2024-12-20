@@ -36,10 +36,10 @@ const MemoriesPage = () => {
       link: "/home",
       title: "Home",
     },
-    {
-      link: "/gallery",
-      title: "Gallery",
-    },
+    // {
+    //   link: "/gallery",
+    //   title: "Gallery",
+    // },
     {
       link: "/share-memory",
       title: "Share a memory",
@@ -71,6 +71,24 @@ const MemoriesPage = () => {
               </div>
             );
           })}
+{/* 
+<div
+            className={cn(
+              "lg:text-[1.6rem] text-[0.95rem] cursor-pointer font-extralight border-b-2  duration-700 px-2 lg:px-4",
+              pathname == "/share-memory" ? "border-b-black" : "",
+              "hover:border-b-black text-black border-transparent"
+            )}
+          >
+            <p
+              role="link"
+              onClick={wrapClick(() => {
+                navigate("/share-memory");
+              })}
+              className=""
+            >
+              Share a Memory
+            </p>
+          </div> */}
         </nav>
       </div>
       <h4 className="text-center font-cursive lg:text-[4.8rem] text-[2.3rem] my-4">
@@ -88,7 +106,10 @@ const MemoriesPage = () => {
               5
             )?.map((skel) => {
               return (
-                <div className="flex flex-col h-fit gap-4" key={Math.random() * (600 - 200 + 1)}>
+                <div
+                  className="flex flex-col h-fit gap-4"
+                  key={Math.random() * (600 - 200 + 1)}
+                >
                   {skel?.map((i) => (
                     <div
                       key={i}

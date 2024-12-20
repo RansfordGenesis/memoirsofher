@@ -20,7 +20,7 @@ const ValidationSchema = Yup.object().shape({
   name: Yup.string().optional(),
   title: Yup.string().required(),
   message: Yup.string().required(),
-  tags: Yup.string().optional(),
+  tags: Yup.string().required(),
 });
 const ShareMemory = () => {
   const navigate = useNavigate();
