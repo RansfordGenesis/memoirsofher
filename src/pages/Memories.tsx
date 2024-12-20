@@ -6,9 +6,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const MemoriesPage = () => {
   const [data, setData] = useState<any[]>([]);
-  async function fetchAllMemories() {
-    const { data: Memories } = await supabaseClient.from("memory").select();
 
+  const [loading, setLoading] = useState<boolean>(false);
+  async function fetchAllMemories() {
+    setLoading(true);
+
+    const { data: Memories, error } = await supabaseClient
+      .from("memory")
+      .select();
+
+    if (data && !error) {
+      setLoading(false);
+    }
     setData(() => splitArrayRoundRobin(Memories as any[], 5));
   }
 
@@ -64,28 +73,57 @@ const MemoriesPage = () => {
           })}
         </nav>
       </div>
-      <h4 className="text-center font-cursive lg:text-[4.8rem] text-[2.3rem] mb-4">
+      <h4 className="text-center font-cursive lg:text-[4.8rem] text-[2.3rem] my-4">
         Memory Wall
       </h4>
 
       <div className="grid lg:grid-cols-5 gap-4 md:grid-cols-3">
-        {data?.map((col) => {
-          return (
-            <div className="flex flex-col gap-4">
-              {col.map((cardData: any) => {
-                return (
-                  <MemoryCard
-                    tags={[cardData?.tags]}
-                    title={cardData?.title}
-                    message={cardData?.message}
-                    imageUrl={cardData?.imgUrl}
-                    author={cardData?.name}
-                  />
-                );
-              })}
-            </div>
-          );
-        })}
+        {loading ? (
+          <>
+            {splitArrayRoundRobin(
+              Array.from(
+                { length: 10 },
+                () => Math.floor(Math.random() * (600 - 200 + 1)) + 200
+              ),
+              5
+            )?.map((skel) => {
+              return (
+                <div className="flex flex-col h-fit gap-4" key={Math.random() * (600 - 200 + 1)}>
+                  {skel?.map((i) => (
+                    <div
+                      key={i}
+                      className="w-full bg-gray-200 animate-pulse rounded-lg"
+                      style={{
+                        height: `${i}px`,
+                      }}
+                    ></div>
+                  ))}
+                </div>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            {data?.map((col, inx) => {
+              return (
+                <div className="flex flex-col h-fit gap-4" key={inx}>
+                  {col.map((cardData: any) => {
+                    return (
+                      <MemoryCard
+                        key={cardData?.imgUrl}
+                        tags={[cardData?.tags]}
+                        title={cardData?.title}
+                        message={cardData?.message}
+                        imageUrl={cardData?.imgUrl}
+                        author={cardData?.name || "Anon"}
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
     </div>
   );
