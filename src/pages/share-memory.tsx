@@ -241,8 +241,9 @@ const fields = [
       "KNUST",
       "Family",
       "Friends",
-      "Other",
       "Colleague",
+      "Other",
+
     ],
     id: "tags",
     placeholder: "e.g. KNUST",
