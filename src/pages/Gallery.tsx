@@ -7,7 +7,7 @@ import { GalleryData } from "@/utils/schema";
 import { useEffect, useState } from "react";
 
 const Gallery = () => {
-  const [data, setData] = useState<GalleryData[][]>([]);
+  const [data, setData] = useState<GalleryData[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -22,14 +22,14 @@ const Gallery = () => {
     if (data && !error) {
       setLoading(false);
     }
-    setData(() => splitArrayRoundRobin(Memories as GalleryData[], 5));
+    setData(() => Memories as GalleryData[]);
   }
 
   useEffect(() => {
     fetchAllGalleryImages();
   }, []);
 
-  console.log(data);
+
   return (
     <SharedLayout title="Gallery">
       {loading ? (
@@ -62,7 +62,7 @@ const Gallery = () => {
       ) : (
         <>
           <ParallaxScroll
-            // className=" w-full h-full"
+        
             cards={data}
             component={(item) => (
               <CustomImage
