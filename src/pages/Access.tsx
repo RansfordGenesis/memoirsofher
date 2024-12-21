@@ -29,7 +29,8 @@ const ACCESS_CODE = variable.access_code;
 const AccessPage = () => {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isMemoriesLoading, setIsMemoriesLoading] = useState(true);
+  const [isGalleryLoading, setIsGalleryLoading] = useState(true);
   const [deleting, setDeleting] = useState<{ id: number; type: 'memory' | 'gallery' } | null>(null);
   const [accessCode, setAccessCode] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -42,7 +43,8 @@ const AccessPage = () => {
       setIsAuthorized(true);
       fetchData();
     } else {
-      setLoading(false);
+      setIsMemoriesLoading(false);
+      setIsGalleryLoading(false);
     }
   }, []);
 
@@ -52,6 +54,7 @@ const AccessPage = () => {
 
   const fetchMemories = async () => {
     try {
+      setIsMemoriesLoading(true);
       const { data, error } = await supabaseClient
         .from("memory")
         .select("*")
@@ -61,11 +64,14 @@ const AccessPage = () => {
       setMemories(data || []);
     } catch (error) {
       toast.error("Failed to fetch memories");
+    } finally {
+      setIsMemoriesLoading(false);
     }
   };
 
   const fetchGallery = async () => {
     try {
+      setIsGalleryLoading(true);
       const { data, error } = await supabaseClient
         .from("gallery")
         .select("*")
@@ -76,7 +82,7 @@ const AccessPage = () => {
     } catch (error) {
       toast.error("Failed to fetch gallery items");
     } finally {
-      setLoading(false);
+      setIsGalleryLoading(false);
     }
   };
 
@@ -241,8 +247,13 @@ const AccessPage = () => {
         {/* Gallery Items Section */}
         <div className="mb-12">
           <h2 className="font-cursive text-3xl mb-4">Gallery Items</h2>
-          <div className="grid gap-4">
-            {galleryItems.map((item) => (
+          {isGalleryLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-pulse text-lg">Loading gallery items...</div>
+            </div>
+          ) : (
+            <div className="grid gap-4">
+              {galleryItems.map((item) => (
               <div
                 key={item.id}
                 className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between"
@@ -269,13 +280,19 @@ const AccessPage = () => {
               </div>
             ))}
           </div>
+          )}
         </div>
 
         {/* Memories Section */}
         <div>
           <h2 className="font-cursive text-3xl mb-4">Memories</h2>
-          <div className="grid gap-4">
-            {memories.map((memory) => (
+          {isMemoriesLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-pulse text-lg">Loading memories...</div>
+            </div>
+          ) : (
+            <div className="grid gap-4">
+              {memories.map((memory) => (
               <div
                 key={memory.id}
                 className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between"
@@ -319,6 +336,7 @@ const AccessPage = () => {
               </div>
             ))}
           </div>
+          )}
         </div>
       </div>
     </div>
