@@ -7,7 +7,7 @@ import { CardData } from "@/utils/schema";
 import SharedLayout from "@/layout/parallax-page.layout";
 
 const MemoriesPage = () => {
-  const [data, setData] = useState<CardData[][]>([]);
+  const [data, setData] = useState<CardData[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   async function fetchAllMemories() {
@@ -21,12 +21,13 @@ const MemoriesPage = () => {
     if (data && !error) {
       setLoading(false);
     }
-    setData(() => splitArrayRoundRobin(Memories as CardData[], 5));
+    setData(Memories as CardData[]);
   }
 
   useEffect(() => {
     fetchAllMemories();
   }, []);
+  console.log(data)
   return (
     <SharedLayout title="Memory Wall">
       <>
