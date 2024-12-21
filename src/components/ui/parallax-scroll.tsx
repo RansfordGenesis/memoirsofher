@@ -1,8 +1,6 @@
-"use client";
 import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { motion } from "framer-motion";
-
 import { cn } from "@/lib/utils";
 import MemoryCard from "../memory-card";
 
@@ -30,13 +28,18 @@ export const ParallaxScroll = ({
 
   return (
     <div className={cn("h-full items-start w-full", className)} ref={gridRef}>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 items-start w-full mx-auto gap-10  ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 items-start w-full mx-auto gap-10">
         {cards.map((cardData, idx) => (
-          <div className="grid gap-10" key={`grid-${idx}`}>
+          <motion.div 
+            className="grid gap-10 relative" 
+            key={`grid-${idx}`}
+            style={{ y: translate[idx] }}
+          >
             {cardData.map((item, idx2) => (
-              <motion.div
-                style={{ y: translate[idx] }}
+              <div 
                 key={`card-${idx}-${idx2}`}
+                style={{ transform: 'translate3d(0, 0, 0)' }}
+                className="relative"
               >
                 <MemoryCard
                   tags={item.tags}
@@ -45,9 +48,9 @@ export const ParallaxScroll = ({
                   imageUrl={item.imgUrl}
                   author={item.name || "Anon"}
                 />
-              </motion.div>
+              </div>
             ))}
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
