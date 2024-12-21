@@ -17,13 +17,14 @@ export const ParallaxScroll = <T,>({
   const gridRef = useRef<any>(null);
   const { scrollYProgress } = useScroll();
 
+  console.log(cards);
   const translate = cards.map((_, index) =>
     useTransform(scrollYProgress, [0, 1], [0, index % 2 === 0 ? -200 : 200])
   );
 
   return (
     <div className={cn("h-full items-start w-full", className)} ref={gridRef}>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 items-start w-full mx-auto gap-10  py-20">
+      <div className="hidden  md:grid md:grid-cols-2 lg:grid-cols-5 items-start w-full mx-auto gap-10  py-20">
         {cards.map((cardData, idx) => (
           <motion.div
             className="grid gap-10 relative"
@@ -42,6 +43,23 @@ export const ParallaxScroll = <T,>({
               ))}
             </div>
           </motion.div>
+        ))}
+      </div>
+      <div className="grid grid-cols-1 md:hidden items-start w-full mx-auto gap-10  py-20">
+        {cards.map((cardData, idx) => (
+          <div className="grid gap-10 relative" key={`grid-${idx}`}>
+            <div className="grid gap-10 relative">
+              {cardData.map((item, idx2) => (
+                <div
+                  key={`card-${idx}-${idx2}`}
+                  style={{ transform: "translate3d(0, 0, 0)" }}
+                  className="relative h-fit "
+                >
+                  {component(item)}
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
