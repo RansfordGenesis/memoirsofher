@@ -26,7 +26,7 @@ const MemoryCard = ({
 
   return (
     <>
-      <div 
+      <div
         className="cursor-pointer h-full rounded-xl transition-transform hover:scale-[1.02]"
         onClick={handleCardClick}
         role="button"
@@ -38,7 +38,8 @@ const MemoryCard = ({
           className="w-full rounded-t-xl aspect-auto object-cover"
           skeletonclassname={`h-[${
             Math.floor(Math.random() * (600 - 200 + 1)) + 200
-          }]`}
+          }px]`}
+          height={Math.floor(Math.random() * (600 - 200 + 1)) + 200}
         />
         <div className="border-black/10 border-[1.2px] rounded-b-xl shadow-sm px-3 py-2">
           <p className="text-[0.86rem] text-black/50 font-normal">{author}</p>

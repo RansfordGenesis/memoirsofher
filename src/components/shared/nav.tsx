@@ -19,10 +19,10 @@ const NavBar = ({
       link: "/memories",
       title: "Memories",
     },
-    // {
-    //   link: "/gallery",
-    //   title: "Gallery",
-    // },
+    {
+      link: "/gallery",
+      title: "Gallery",
+    },
     {
       link: "/share-memory",
       title: "Share a memory",

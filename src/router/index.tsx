@@ -3,6 +3,7 @@ import HomePage from "../pages/Home";
 import MemoriesPage from "../pages/Memories";
 import ShareMemory from "../pages/share-memory";
 import AccessPage from "../pages/Access";
+import Gallery from "@/pages/Gallery";
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,10 @@ export const router = createBrowserRouter([
   {
     path: "share-memory",
     element: <ShareMemory />,
+  },
+  {
+    path: "gallery",
+    element: <Gallery />,
   },
   {
     path: "memories",

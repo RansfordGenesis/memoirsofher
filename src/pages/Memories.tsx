@@ -1,12 +1,13 @@
 import { supabaseClient } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import { splitArrayRoundRobin } from "@/utils";
-// import { useLocation, useNavigate } from "react-router-dom";
-import NavBar from "@/components/shared/nav";
 import { ParallaxScroll } from "@/components/ui/parallax-scroll";
+import MemoryCard from "@/components/memory-card";
+import { CardData } from "@/utils/schema";
+import SharedLayout from "@/layout/parallax-page.layout";
 
 const MemoriesPage = () => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<CardData[][]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   async function fetchAllMemories() {
@@ -20,47 +21,17 @@ const MemoriesPage = () => {
     if (data && !error) {
       setLoading(false);
     }
-    setData(() => splitArrayRoundRobin(Memories as any[], 5));
+    setData(() => splitArrayRoundRobin(Memories as CardData[], 5));
   }
 
   useEffect(() => {
     fetchAllMemories();
   }, []);
-  // const navigate = useNavigate();
-
-  // const { pathname } = useLocation();
-  // const other_pages = [
-  //   {
-  //     link: "/memories",
-  //     title: "Memories",
-  //   },
-  //   {
-  //     link: "/home",
-  //     title: "Home",
-  //   },
-  //   {
-  //     link: "/gallery",
-  //     title: "Gallery",
-  //   },
-  //   {
-  //     link: "/share-memory",
-  //     title: "Share a memory",
-  //   },
-  // ];
-
   return (
-    <div className=" px-4 lg:mx-auto relative  pb-10 ">
-      <NavBar
-        linkClass="hover:border-b-black text-black border-transparent"
-        undelinecolor="border-b-black"
-      />
-      <h4 className="text-center font-cursive lg:text-[4.8rem] text-[2.3rem] mb-4 pt-[4.5rem] ">
-        Memory Wall
-      </h4>
-
-     
+    <SharedLayout title="Memory Wall">
+      <>
         {loading ? (
-         <div className="grid lg:grid-cols-5 gap-4 md:grid-cols-3">
+          <div className="grid lg:grid-cols-5 gap-4 md:grid-cols-3">
             {splitArrayRoundRobin(
               Array.from(
                 { length: 10 },
@@ -88,11 +59,24 @@ const MemoriesPage = () => {
           </div>
         ) : (
           <>
-             <ParallaxScroll className=" w-full h-full" cards={data} />;
+            <ParallaxScroll
+              className=" w-full h-full"
+              cards={data}
+              component={(item) => (
+                <MemoryCard
+                  tags={item.tags}
+                  title={item.title}
+                  message={item.message}
+                  imageUrl={item.imgUrl}
+                  author={item.name || "Anon"}
+                />
+              )}
+            />
+            ;
           </>
         )}
-      </div>
-
+      </>
+    </SharedLayout>
   );
 };
 

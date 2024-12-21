@@ -79,7 +79,7 @@ const ShareMemory = () => {
   });
 
   return (
-    <div className="lg:h-screen w-screen relative lg:overflow-clip overflow-x-clip overflow-y-scroll pb-[4rem] grid place-content-center  ">
+    <div className="lg:h-screen w-screen relative overflow-x-clip overflow-y-scroll pb-[4rem] grid place-content-center  ">
       <NavBar
         linkClass="hover:border-b-black text-black border-transparent z-[100]"
         undelinecolor="border-b-black"
@@ -240,8 +240,10 @@ const fields = [
       "MSP",
       "KNUST",
       "Family",
-      "Friends",
+      "Friend",
       "Colleague",
+      "Childhood",
+      "Church",
       "Other",
     ],
     id: "tags",
