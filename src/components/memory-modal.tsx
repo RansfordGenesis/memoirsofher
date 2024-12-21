@@ -22,7 +22,7 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
     <AnimatePresence>
       {isOpen && (
         <div 
-          className="fixed inset-0 flex items-start justify-center isolate overflow-y-auto py-4 px-4 sm:py-8"
+          className="fixed inset-0 flex items-center justify-center isolate overflow-y-auto py-4 px-4 sm:py-8"
           style={{ zIndex: 9999 }}
         >
           {/* Backdrop */}
