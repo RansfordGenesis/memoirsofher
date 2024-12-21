@@ -88,7 +88,6 @@ export const ParallaxScroll = <T,>({
         {cards.map((item, idx) => (
           <div
             key={`mobile-card-${idx}`}
-            style={{ transform: "translate3d(0, 0, 0)" }}
             className="relative h-fit"
           >
             {component(item)}
