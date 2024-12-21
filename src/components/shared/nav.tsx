@@ -30,7 +30,7 @@ const NavBar = ({
   ];
   const navigate = useNavigate();
   return (
-    <nav className=" flex lg:items-center justify-center   gap-4 pt-6 absolute  right-0 px-2 lg:px-0 lg:right-8 z-40 w-[100vw] lg:w-fit">
+    <nav className=" flex lg:items-center justify-center gap-4 pt-6 absolute right-0 px-2 lg:px-0 lg:right-8 z-40 w-[100vw] lg:w-fit">
       {other_pages?.map((page) => {
         return (
           <div
