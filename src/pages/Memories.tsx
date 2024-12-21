@@ -1,9 +1,9 @@
 import { supabaseClient } from "@/lib/supabase";
-import MemoryCard from "../components/memory-card";
 import { useEffect, useState } from "react";
 import { splitArrayRoundRobin } from "@/utils";
 // import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "@/components/shared/nav";
+import { ParallaxScroll } from "@/components/ui/parallax-scroll";
 
 const MemoriesPage = () => {
   const [data, setData] = useState<any[]>([]);
@@ -47,6 +47,7 @@ const MemoriesPage = () => {
   //     title: "Share a memory",
   //   },
   // ];
+
   return (
     <div className=" px-4 lg:mx-auto relative  pb-10 ">
       <NavBar
@@ -57,9 +58,9 @@ const MemoriesPage = () => {
         Memory Wall
       </h4>
 
-      <div className="grid lg:grid-cols-5 gap-4 md:grid-cols-3">
+     
         {loading ? (
-          <>
+         <div className="grid lg:grid-cols-5 gap-4 md:grid-cols-3">
             {splitArrayRoundRobin(
               Array.from(
                 { length: 10 },
@@ -84,31 +85,14 @@ const MemoriesPage = () => {
                 </div>
               );
             })}
-          </>
+          </div>
         ) : (
           <>
-            {data?.map((col, inx) => {
-              return (
-                <div className="flex flex-col h-fit gap-4" key={inx}>
-                  {col.map((cardData: any) => {
-                    return (
-                      <MemoryCard
-                        key={cardData?.imgUrl}
-                        tags={cardData?.tags}
-                        title={cardData?.title}
-                        message={cardData?.message}
-                        imageUrl={cardData?.imgUrl}
-                        author={cardData?.name || "Anon"}
-                      />
-                    );
-                  })}
-                </div>
-              );
-            })}
+             <ParallaxScroll className=" w-full h-full" cards={data} />;
           </>
         )}
       </div>
-    </div>
+
   );
 };
 
