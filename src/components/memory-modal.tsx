@@ -18,12 +18,11 @@ interface MemoryModalProps {
 const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
   if (!memory) return null;
 
-  // Render the modal in a portal at the root level
   return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div 
-          className="fixed inset-0 flex items-center justify-center isolate"
+          className="fixed inset-0 flex items-start justify-center isolate overflow-y-auto py-4 px-4 sm:py-8"
           style={{ zIndex: 9999 }}
         >
           {/* Backdrop */}
@@ -32,7 +31,7 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             style={{ zIndex: 1 }}
           />
           
@@ -41,10 +40,10 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="relative w-[90vw] max-w-3xl bg-white rounded-xl shadow-2xl max-h-[85vh] overflow-y-auto"
+            className="relative w-full max-w-5xl bg-white rounded-xl shadow-2xl mx-auto"
             style={{ zIndex: 2 }}
           >
-            <div className="sticky top-0 right-0">
+            <div className="sticky top-0 right-0 z-10">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -56,22 +55,28 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
               </button>
             </div>
 
-            <div>
-              <CustomImage
-                src={memory.imageUrl}
-                alt={memory.title}
-                className="w-full rounded-t-xl aspect-video object-cover"
-              />
+            <div className="flex flex-col lg:flex-row">
+              {/* Image Container */}
+              <div className="lg:flex-1 lg:max-h-[90vh]">
+                <CustomImage
+                  src={memory.imageUrl}
+                  alt={memory.title}
+                  className="w-full h-full object-cover rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none"
+                />
+              </div>
               
-              <div className="p-6">
-                <div className="mb-4">
-                  <h2 className="text-2xl font-medium mb-2">{memory.title}</h2>
-                  <p className="text-sm text-black/50">
+              {/* Content Container */}
+              <div className="lg:flex-1 p-6 lg:p-8 lg:max-h-[90vh] lg:overflow-y-auto">
+                <div className="mb-6">
+                  <h2 className="text-2xl sm:text-3xl font-medium mb-2">
+                    {memory.title}
+                  </h2>
+                  <p className="text-sm sm:text-base text-black/50">
                     Shared by {memory.author || "Anonymous"}
                   </p>
                 </div>
                 
-                <p className="text-lg leading-relaxed mb-6 whitespace-pre-wrap">
+                <p className="text-base sm:text-lg leading-relaxed mb-8 whitespace-pre-wrap">
                   {memory.message}
                 </p>
                 
