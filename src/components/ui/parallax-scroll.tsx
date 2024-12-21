@@ -39,7 +39,7 @@ export const ParallaxScroll = <T,>({
   return (
     <div className={cn("h-full items-start w-full", className)} ref={gridRef}>
  
-      <div className="hidden lg:grid lg:grid-cols-4 items-start w-full mx-auto gap-10 py-20">
+      <div className="hidden lg:grid lg:grid-cols-4 items-start w-full mx-auto gap-2 py-20">
         {desktopColumns.map((columnCards, idx) => (
           <motion.div
             className="grid gap-10 relative"
@@ -62,7 +62,7 @@ export const ParallaxScroll = <T,>({
       </div>
 
 
-      <div className="hidden md:grid md:grid-cols-2 lg:hidden items-start w-full mx-auto gap-10 py-20">
+      <div className="hidden md:grid md:grid-cols-2 lg:hidden items-start w-full mx-auto gap-3 py-20">
         {mediumColumns.map((columnCards, idx) => (
           <motion.div
             className="grid gap-10 relative"
@@ -88,7 +88,6 @@ export const ParallaxScroll = <T,>({
         {cards.map((item, idx) => (
           <div
             key={`mobile-card-${idx}`}
-            style={{ transform: "translate3d(0, 0, 0)" }}
             className="relative h-fit"
           >
             {component(item)}
