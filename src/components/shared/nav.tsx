@@ -1,5 +1,5 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { cn, wrapClick } from "../../utils";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "../../utils";
 import { motion } from "framer-motion";
 
 interface Props {
@@ -19,7 +19,6 @@ const NavBar = ({
 	underlineColor = "bg-white",
 }: Props) => {
 	const { pathname } = useLocation();
-	const navigate = useNavigate();
 
 	const navVariants = {
 		hidden: { y: -20, opacity: 0 },
@@ -46,6 +45,13 @@ const NavBar = ({
 		},
 	};
 
+	const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+		if (e.ctrlKey || e.metaKey || e.button === 1) {
+			e.stopPropagation();
+			return;
+		}
+	};
+
 	return (
 		<motion.nav
 			initial="hidden"
@@ -62,18 +68,24 @@ const NavBar = ({
 								variants={itemVariants}
 								className="relative group"
 							>
-								<motion.button
+								<motion.div
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
-									onClick={wrapClick(() => navigate(page.link))}
-									className={cn(
-										"text-xs sm:text-sm lg:text-lg font-light tracking-wide transition-colors duration-200 px-1 sm:px-2 py-0.5 sm:py-1",
-										linkClass,
-										pathname === page.link ? "font-normal" : "hover:font-normal"
-									)}
 								>
-									{page.title}
-								</motion.button>
+									<Link
+										to={page.link}
+										onClick={(e) => handleClick(e)}
+										className={cn(
+											"text-xs sm:text-sm lg:text-lg font-light tracking-wide transition-colors duration-200 px-1 sm:px-2 py-0.5 sm:py-1 block",
+											linkClass,
+											pathname === page.link
+												? "font-normal"
+												: "hover:font-normal"
+										)}
+									>
+										{page.title}
+									</Link>
+								</motion.div>
 
 								{/* Active indicator */}
 								{pathname === page.link && (
