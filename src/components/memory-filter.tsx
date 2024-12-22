@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface Props {
 	tags: string[];
@@ -9,7 +10,12 @@ interface Props {
 
 const MemoryFilter = ({ tags, selectedTags, onTagSelect }: Props) => {
 	return (
-		<div className="flex flex-wrap gap-2 mb-8 justify-center">
+		<motion.div
+			initial={{ y: -20, opacity: 0 }}
+			animate={{ y: 0, opacity: 1 }}
+			transition={{ duration: 0.6, type: "spring" }}
+			className="flex flex-wrap gap-2 mb-8 justify-center"
+		>
 			{tags.map((tag) => (
 				<Badge
 					key={tag}
@@ -24,7 +30,7 @@ const MemoryFilter = ({ tags, selectedTags, onTagSelect }: Props) => {
 					#{tag}
 				</Badge>
 			))}
-		</div>
+		</motion.div>
 	);
 };
 
