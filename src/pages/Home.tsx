@@ -41,22 +41,16 @@ const HomePage = () => {
 			</div>
 
 			<div className="text-white z-50 flex items-center justify-center flex-col px-4 lg:px-2 lg:gap-8 gap-6">
-				<motion.p
-					variants={typewriterVariants}
-					initial="hidden"
-					animate="visible"
-					className="font-cursive font-extralight text-[2.4rem] lg:text-[5.5rem] text-center"
-				>
+				<p className="font-cursive font-extralight text-[2.4rem] lg:text-[5.5rem] text-center">
 					{titleText.split("").map((char, index) => (
-						<motion.span
+						<span
 							key={index}
-							variants={letterVariants}
 							className="inline-block font-cursive font-extralight text-[2.4rem] lg:text-[5rem] text-center "
 						>
 							{char === " " ? "\u00A0" : char}
-						</motion.span>
+						</span>
 					))}
-				</motion.p>
+				</p>
 
 				<motion.h4
 					variants={typewriterVariants}
