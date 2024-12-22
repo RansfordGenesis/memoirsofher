@@ -26,7 +26,7 @@ const NavBar = ({
 			y: 0,
 			opacity: 1,
 			transition: {
-				duration: 0.6,
+				duration: 0.4,
 				ease: "easeOut",
 				staggerChildren: 0.1,
 			},
@@ -39,7 +39,7 @@ const NavBar = ({
 			y: 0,
 			opacity: 1,
 			transition: {
-				duration: 0.4,
+				duration: 0.2,
 				ease: "easeOut",
 			},
 		},
