@@ -22,7 +22,7 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
     <AnimatePresence>
       {isOpen && (
         <div 
-          className="fixed inset-0 flex items-center justify-center isolate overflow-y-auto py-4 px-4 sm:py-8"
+          className="fixed inset-0 flex items-start sm:items-center justify-center isolate p-4"
           style={{ zIndex: 9999 }}
         >
           {/* Backdrop */}
@@ -40,46 +40,73 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="relative w-full max-w-5xl bg-white rounded-xl shadow-2xl mx-auto"
+            className="relative w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-y-auto max-h-[90vh]"
             style={{ zIndex: 2 }}
           >
-            <div className="sticky top-0 right-0 z-10">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClose();
-                }}
-                className="absolute right-4 top-4 p-2 rounded-full bg-black/10 hover:bg-black/20 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            {/* Close Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              className="absolute right-4 top-4 p-2 rounded-full bg-black/10 hover:bg-black/20 transition-colors z-50"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-            <div className="flex flex-col lg:flex-row">
-              {/* Image Container */}
-              <div className="lg:flex-1 lg:max-h-[90vh]">
+            {/* Mobile, Tablet & Medium Screens Layout */}
+            <div className="block xl:hidden">
+              <div className="h-[40vh] md:h-[45vh] w-full">
                 <CustomImage
                   src={memory.imageUrl}
                   alt={memory.title}
-                  className="w-full h-full object-cover rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none"
+                  className="w-full h-full object-contain bg-black/5"
                 />
               </div>
-              
-              {/* Content Container */}
-              <div className="lg:flex-1 p-6 lg:p-8 lg:max-h-[90vh] lg:overflow-y-auto">
+              <div className="p-6 md:p-8">
                 <div className="mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-medium mb-2">
-                    {memory.title}
-                  </h2>
-                  <p className="text-sm sm:text-base text-black/50">
+                  <h2 className="text-2xl md:text-3xl font-medium mb-2">{memory.title}</h2>
+                  <p className="text-sm md:text-base text-black/50">
                     Shared by {memory.author || "Anonymous"}
                   </p>
                 </div>
-                
-                <p className="text-base sm:text-lg leading-relaxed mb-8 whitespace-pre-wrap">
+                <p className="text-base md:text-lg leading-relaxed mb-8 whitespace-pre-wrap">
                   {memory.message}
                 </p>
-                
+                <div className="flex flex-wrap gap-2">
+                  {memory.tags
+                    ?.filter((tag) => tag.trim() !== "")
+                    ?.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-black/5 rounded-full text-sm"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Large Desktop Layout */}
+            <div className="hidden xl:flex">
+              <div className="w-1/2 h-[85vh]">
+                <CustomImage
+                  src={memory.imageUrl}
+                  alt={memory.title}
+                  className="w-full h-full object-contain bg-black/5"
+                />
+              </div>
+              <div className="w-1/2 p-8 overflow-y-auto max-h-[85vh]">
+                <div className="mb-6">
+                  <h2 className="text-3xl font-medium mb-2">{memory.title}</h2>
+                  <p className="text-base text-black/50">
+                    Shared by {memory.author || "Anonymous"}
+                  </p>
+                </div>
+                <p className="text-lg leading-relaxed mb-8 whitespace-pre-wrap">
+                  {memory.message}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {memory.tags
                     ?.filter((tag) => tag.trim() !== "")
