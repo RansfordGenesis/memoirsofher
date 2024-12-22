@@ -119,7 +119,6 @@ const Gallery = () => {
                     alt="image"
                     className="aspect-auto object-cover rounded-xl"
                     height={Math.floor(Math.random() * (600 - 200 + 1)) + 200}
-                    loading="lazy"
                   />
                 </motion.div>
               )}
