@@ -66,7 +66,7 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
               </div>
               <div className="p-6 md:p-8">
                 <div className="mb-6">
-                  <h2 className="text-2xl md:text-3xl font-medium mb-2 break-all">{memory.title}</h2>
+                  <h2 className="text-2xl md:text-3xl font-medium mb-2 pt-3 break-all">{memory.title}</h2>
                   <p className="text-sm md:text-base text-black/50">
                     Shared by {memory.author || "Anonymous"}
                   </p>
@@ -95,12 +95,12 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
                 <CustomImage
                   src={memory.imageUrl}
                   alt={memory.title}
-                  className="w-full h-full object-cover bg-black/5"
+                  className="w-full h-full object-cover bg-black/5 "
                 />
               </div>
               <div className="w-1/2 p-8 overflow-y-auto max-h-[85vh]">
                 <div className="mb-6">
-                  <h2 className="text-3xl font-medium mb-2 break-all">{memory.title}</h2>
+                  <h2 className="text-3xl font-medium mb-2 break-all pt-4">{memory.title}</h2>
                   <p className="text-base text-black/50">
                     Shared by {memory.author || "Anonymous"}
                   </p>
