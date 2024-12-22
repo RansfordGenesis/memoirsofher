@@ -19,59 +19,78 @@ const ValidationSchema = Yup.object().shape({
 });
 
 const ShareMemory = () => {
-  const navigate = useNavigate();
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
-  const [submiting, setSubmiting] = React.useState<boolean>(false);
-  
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSelectedFile(file);
-    
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-    } else {
-      setImagePreview(null);
-    }
-  };
+	const navigate = useNavigate();
+	const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+	const [submiting, setSubmiting] = React.useState<boolean>(false);
 
-  const { ...form } = useFormik({
-    initialValues: {
-      name: "",
-      title: "",
-      message: "",
-      tags: [],
-    },
-    validationSchema: ValidationSchema,
-    validateOnMount: false,
-    validateOnChange: true,
-    onSubmit: async (values) => {
-      if (!selectedFile) {
-        toast.error("Please select an image to share");
-        return;
-      }
+	// Function to convert emoji to image file
+	const createCandleImageFile = async () => {
+		const canvas = document.createElement('canvas');
+		const ctx = canvas.getContext('2d');
+		canvas.width = 400;
+		canvas.height = 400;
+		
+		if (ctx) {
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.font = '200px Arial';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.fillText('🕯️', canvas.width / 2, canvas.height / 2);
+		}
 
-      setSubmiting(true);
-      const fileName = `public/memory-${uuidv4()}`;
-      toast.promise(
-        supabaseClient.storage
-          .from("images")
-          .upload(fileName, selectedFile as File)
-          .then(async () => {
-            const {
-              data: { publicUrl },
-            } = supabaseClient.storage.from("images").getPublicUrl(fileName);
-            const { error } = await supabaseClient.from("memory").insert({
-              ...values,
-              imgUrl: publicUrl,
-            });
+		return new Promise<File>((resolve) => {
+			canvas.toBlob((blob) => {
+				const file = new File([blob!], 'candle.png', { type: 'image/png' });
+				resolve(file);
+			}, 'image/png');
+		});
+	};
 
-            if (!error) {
-              toast.success("Thank you for sharing your memory of Jojo🤍");
-              form.resetForm();
-              navigate("/memories");
-            }
+	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0] || null;
+		setSelectedFile(file);
+	};
+
+	const { ...form } = useFormik<{
+		name: string;
+		title: string;
+		message: string;
+		tags: string[];
+	}>({
+		initialValues: {
+			name: "",
+			title: "",
+			message: "",
+			tags: [],
+		},
+		validationSchema: ValidationSchema,
+		validateOnMount: false,
+		validateOnChange: false,
+		onSubmit: async (values) => {
+			setSubmiting(true);
+			const fileName = `public/memory-${uuidv4()}`;
+			const fileToUpload = selectedFile || await createCandleImageFile();
+
+			toast.promise(
+				supabaseClient.storage
+					.from("images")
+					.upload(fileName, fileToUpload)
+					.then(async () => {
+						const {
+							data: { publicUrl },
+						} = supabaseClient.storage.from("images").getPublicUrl(fileName);
+						const { error } = await supabaseClient.from("memory").insert({
+							...values,
+							imgUrl: publicUrl,
+						});
+
+						if (!error) {
+							toast.success("Thank you for sharing a memory of Jojo🤍");
+							form.resetForm();
+							setSelectedFile(null);
+							navigate("/memories");
+						}
 
             setSubmiting(false);
           }),
