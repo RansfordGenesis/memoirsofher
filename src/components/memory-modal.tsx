@@ -55,8 +55,9 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
             </button>
 
             {/* Mobile, Tablet & Medium Screens Layout */}
-            <div className="block xl:hidden">
-              <div className="h-[40vh] md:h-[45vh] w-full">
+            <div className="h-fit xl:hidden">
+              {/* <div className="h-[40vh] md:h-[45vh] w-full"> */}
+              <div>
                 <CustomImage
                   src={memory.imageUrl}
                   alt={memory.title}

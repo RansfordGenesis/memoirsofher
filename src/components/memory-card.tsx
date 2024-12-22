@@ -27,7 +27,7 @@ const MemoryCard = ({
   return (
     <>
       <div
-        className="cursor-pointer h-full rounded-xl transition-transform hover:scale-[1.02]"
+        className="cursor-pointer h-full rounded-xl transition-transform hover:scale-[1.02] shadow-md"
         onClick={handleCardClick}
         role="button"
         tabIndex={0}
