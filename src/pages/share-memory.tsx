@@ -27,6 +27,31 @@ const ShareMemory = () => {
 	const navigate = useNavigate();
 	const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 	const [submiting, setSubmiting] = React.useState<boolean>(false);
+
+	// Function to convert emoji to image file
+	const createCandleImageFile = async () => {
+		const canvas = document.createElement('canvas');
+		const ctx = canvas.getContext('2d');
+		canvas.width = 400;
+		canvas.height = 400;
+		
+		if (ctx) {
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.font = '200px Arial';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.fillText('🕯️', canvas.width / 2, canvas.height / 2);
+		}
+
+		return new Promise<File>((resolve) => {
+			canvas.toBlob((blob) => {
+				const file = new File([blob!], 'candle.png', { type: 'image/png' });
+				resolve(file);
+			}, 'image/png');
+		});
+	};
+
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0] || null;
 		setSelectedFile(file);
@@ -50,10 +75,12 @@ const ShareMemory = () => {
 		onSubmit: async (values) => {
 			setSubmiting(true);
 			const fileName = `public/memory-${uuidv4()}`;
+			const fileToUpload = selectedFile || await createCandleImageFile();
+
 			toast.promise(
 				supabaseClient.storage
 					.from("images")
-					.upload(fileName, selectedFile as File)
+					.upload(fileName, fileToUpload)
 					.then(async () => {
 						const {
 							data: { publicUrl },
@@ -66,6 +93,7 @@ const ShareMemory = () => {
 						if (!error) {
 							toast.success("Thank you for sharing a memory of Jojo🤍");
 							form.resetForm();
+							setSelectedFile(null);
 							navigate("/memories");
 						}
 
@@ -187,12 +215,7 @@ const ShareMemory = () => {
 						<button
 							disabled={submiting}
 							className="bg-black disabled:bg-black/30 hover:bg-black/95 duration-700 text-white py-2 rounded-lg"
-							onClick={() => {
-								if (selectedFile == null) {
-									toast.error("Image is required");
-								}
-								form.handleSubmit();
-							}}
+							onClick={() => form.handleSubmit()}
 						>
 							Share Memory
 						</button>
