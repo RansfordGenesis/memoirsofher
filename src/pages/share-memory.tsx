@@ -21,6 +21,7 @@ const ValidationSchema = Yup.object().shape({
 const ShareMemory = () => {
 	const navigate = useNavigate();
 	const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
 	const [submiting, setSubmiting] = React.useState<boolean>(false);
 
 	// Function to convert emoji to image file
@@ -47,10 +48,17 @@ const ShareMemory = () => {
 		});
 	};
 
-	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0] || null;
-		setSelectedFile(file);
-	};
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setSelectedFile(file);
+    
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    } else {
+      setImagePreview(null);
+    }
+  };
 
 	const { ...form } = useFormik<{
 		name: string;
