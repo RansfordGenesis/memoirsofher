@@ -20,7 +20,8 @@ const MemoriesPage = () => {
 		const { data: Memories, error } = await supabaseClient
 			.from("memory")
 			.select()
-			.order("created_at", { ascending: false });
+			.order("created_at", { ascending: false })
+			.limit(50);
 
 		if (!error) {
 			setData(Memories as CardData[]);
@@ -44,7 +45,7 @@ const MemoriesPage = () => {
 				type: "spring",
 				damping: 30,
 				stiffness: 100,
-				duration: 0.6,
+				duration: 0.3,
 				when: "beforeChildren",
 				staggerChildren: 0.1,
 			},

@@ -16,7 +16,6 @@ const CustomImage = (
         {...props}
         onLoad={() => setLoaded(true)}
         style={{ display: loaded ? "block" : "none" }}
-        loading="lazy"
       />
       {!loaded && (
         <div
