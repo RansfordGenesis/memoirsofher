@@ -40,6 +40,7 @@ const MemoryCard = ({
             Math.floor(Math.random() * (600 - 200 + 1)) + 200
           }px]`}
           height={Math.floor(Math.random() * (600 - 200 + 1)) + 200}
+          loading="lazy"
         />
         <div className="border-black/10 border-[1.2px] rounded-b-xl shadow-sm px-3 py-2">
           <p className="text-[0.86rem] text-black/50 font-normal">{author}</p>
