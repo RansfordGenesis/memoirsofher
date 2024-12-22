@@ -40,7 +40,7 @@ const HomePage = () => {
 	};
 
 	const titleText = "In Loving Memory of";
-	const nameText = "Josephine Nana Adwoa Asmah";
+	const nameParts = ["Josephine", "Nana", "Adwoa", "Asmah"];
 
 	return (
 		<div className="h-screen w-screen bg-black relative overflow-clip grid place-content-center">
@@ -75,17 +75,32 @@ const HomePage = () => {
 						textShadow: "0 0 10px rgba(255,255,255,0.3)",
 					}}
 				>
-					{nameText.split("").map((char, index) => (
-						<motion.span
-							key={index}
-							variants={letterVariants}
-							className="inline-block relative group-hover:text-transparent text-white duration-300"
-							style={{
-								WebkitTextStroke: "1px white",
-							}}
-						>
-							{char === " " ? "\u00A0" : char}
-						</motion.span>
+					{nameParts.map((word, wordIndex) => (
+						<span key={wordIndex} className="whitespace-nowrap">
+							{word.split("").map((char, charIndex) => (
+								<motion.span
+									key={`${wordIndex}-${charIndex}`}
+									variants={letterVariants}
+									className="inline-block relative group-hover:text-transparent text-white duration-300"
+									style={{
+										WebkitTextStroke: "1px white",
+									}}
+								>
+									{char}
+								</motion.span>
+							))}
+							{wordIndex < nameParts.length - 1 && (
+								<motion.span
+									variants={letterVariants}
+									className="inline-block relative group-hover:text-transparent text-white duration-300"
+									style={{
+										WebkitTextStroke: "1px white",
+									}}
+								>
+									{"\u00A0"}
+								</motion.span>
+							)}
+						</span>
 					))}
 				</motion.h4>
 
