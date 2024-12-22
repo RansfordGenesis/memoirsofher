@@ -1,60 +1,75 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn, wrapClick } from "../../utils";
 
-interface props {
-  linkClass?: string;
-  undelinecolor?: string;
+interface Props {
+	linkClass?: string;
+	underlineColor?: string;
 }
+
+const other_pages = [
+	{
+		link: "/",
+		title: "Home",
+	},
+	{
+		link: "/memories",
+		title: "Memories",
+	},
+	{
+		link: "/gallery",
+		title: "Gallery",
+	},
+	{
+		link: "/share-memory",
+		title: "Share a memory",
+	},
+];
+
 const NavBar = ({
-  linkClass = "border-b-black hover:border-b-white text-white ",
-  undelinecolor = "border-b-white",
-}: props) => {
-  const { pathname } = useLocation();
-  const other_pages = [
-    {
-      link: "/",
-      title: "Home",
-    },
-    {
-      link: "/memories",
-      title: "Memories",
-    },
-    {
-      link: "/gallery",
-      title: "Gallery",
-    },
-    {
-      link: "/share-memory",
-      title: "Share a memory",
-    },
-  ];
-  const navigate = useNavigate();
-  return (
-    <nav className=" flex lg:items-center justify-center gap-4 pt-6 absolute right-0 px-2 lg:px-0 lg:right-8 z-40 w-[100vw] lg:w-fit">
-      {other_pages?.map((page) => {
-        return (
-          <div
-            className={cn(
-              "lg:text-[1.6rem] text-[0.95rem] cursor-pointer font-extralight border-b-2  duration-700 px-2 lg:px-4",
-              pathname == page.link ? (undelinecolor as string) : "",
-              linkClass
-            )}
-            key={page.title}
-          >
-            <p
-              role="link"
-              onClick={wrapClick(() => {
-                navigate(page.link);
-              })}
-              className=""
-            >
-              {page.title}
-            </p>
-          </div>
-        );
-      })}
-    </nav>
-  );
+	linkClass = "text-white",
+	underlineColor = "bg-white",
+}: Props) => {
+	const { pathname } = useLocation();
+	const navigate = useNavigate();
+
+	return (
+		<nav className="flex lg:items-center justify-center gap-2 lg:gap-4 pt-4 lg:pt-6 absolute right-0 px-1 lg:px-0 lg:right-8 z-40 w-full lg:w-fit">
+			{other_pages?.map((page) => (
+				<div
+					key={page.title}
+					className="relative lg:text-[1.6rem] text-[0.95rem] cursor-pointer font-extralight px-1 lg:px-4 group"
+				>
+					<p
+						role="link"
+						onClick={wrapClick(() => {
+							navigate(page.link);
+						})}
+						className={cn(linkClass)}
+					>
+						{page.title}
+					</p>
+
+					{/* Active underline */}
+					{pathname === page.link && (
+						<div
+							className={cn(
+								"absolute bottom-0 left-0 w-full h-0.5",
+								underlineColor
+							)}
+						/>
+					)}
+
+					{/* Hover underline with animation */}
+					<div
+						className={cn(
+							"absolute bottom-0 left-0 w-full h-0.5 transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100",
+							underlineColor
+						)}
+					/>
+				</div>
+			))}
+		</nav>
+	);
 };
 
 export default NavBar;
