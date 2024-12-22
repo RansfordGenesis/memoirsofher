@@ -56,7 +56,7 @@ const HomePage = () => {
 					variants={typewriterVariants}
 					initial="hidden"
 					animate="visible"
-					className="relative lg:text-[5rem] text-[2.5rem] text-center font-semibold uppercase leading-tight lg:leading-normal group"
+					className="relative lg:text-[6rem] lg:tracking-wide text-[2.5rem] text-center font-semibold uppercase leading-tight lg:leading-normal group"
 					style={{
 						textShadow: "0 0 10px rgba(255,255,255,0.3)",
 					}}
