@@ -79,7 +79,7 @@ const ShareMemory = () => {
 	});
 
 	return (
-		<div className="lg:h-screen w-screen relative overflow-x-clip overflow-y-scroll pb-[4rem] grid place-content-center  ">
+		<div className="lg:h-full w-screen relative overflow-x-clip overflow-y-scroll pb-[4rem] grid place-content-center  ">
 			<NavBar linkClass="text-black" underlineColor="bg-black" />
 			<div className="w-full h-full absolute left-0 right-0 top-0 grid lg:place-content-center z-0">
 				<div className="w-full h-full bg-white/[0.5] absolute left-0 right-0 top-0 backdrop-blur-[2px]"></div>
@@ -90,7 +90,7 @@ const ShareMemory = () => {
 				/>
 			</div>
 
-			<div className="text-black z-50 flex items-center justify-center flex-col px-4 lg:px-2 lg:gap-5 gap-4 mt-[5rem] mb-10 ">
+			<div className="text-black z-10 flex items-center justify-center flex-col px-4 lg:px-2 lg:gap-5 gap-4 mt-[5rem] mb-10 ">
 				<p className="font-cursive font-extralight text-[2.4rem] lg:text-[5rem] text-center  ">
 					Share A Memory.
 				</p>
