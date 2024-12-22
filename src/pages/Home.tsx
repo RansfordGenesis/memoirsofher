@@ -10,17 +10,31 @@ const HomePage = () => {
 		hidden: { opacity: 0 },
 		visible: (i = 1) => ({
 			opacity: 1,
-			transition: { staggerChildren: 0.05, delayChildren: 0.1 * i },
+			transition: {
+				staggerChildren: 0.03,
+				delayChildren: 0.05 * i,
+			},
 		}),
 	};
 
 	const letterVariants = {
-		hidden: { opacity: 0, y: 50 },
+		hidden: {
+			opacity: 0,
+			y: 20,
+			transition: {
+				type: "spring",
+				damping: 12,
+				stiffness: 200,
+			},
+		},
 		visible: {
 			opacity: 1,
 			y: 0,
 			transition: {
-				duration: 0.3,
+				type: "spring",
+				damping: 12,
+				stiffness: 200,
+				duration: 0.2,
 			},
 		},
 	};
@@ -56,7 +70,7 @@ const HomePage = () => {
 					variants={typewriterVariants}
 					initial="hidden"
 					animate="visible"
-					className="relative lg:text-[6rem] lg:tracking-wide text-[2.5rem] text-center font-semibold uppercase leading-tight lg:leading-normal group"
+					className="relative lg:text-[5rem] lg:tracking-wide text-[2.5rem] text-center font-semibold uppercase leading-tight lg:leading-normal group"
 					style={{
 						textShadow: "0 0 10px rgba(255,255,255,0.3)",
 					}}
@@ -78,7 +92,7 @@ const HomePage = () => {
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: 2, duration: 0.8 }}
+					transition={{ delay: 0.6, duration: 0.6 }}
 					className="cursor-pointer w-fit font-extralight uppercase border-[0.9px] border-[#ffffff] lg:p-6 lg:text-[1.4rem] text-[0.9rem] p-3 hover:bg-white hover:text-black duration-700"
 					role="link"
 					whileHover={{ scale: 1.05 }}
