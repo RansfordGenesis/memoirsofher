@@ -11,7 +11,7 @@ const other_pages = [
 	{ link: "/", title: "Home" },
 	{ link: "/memories", title: "Memories" },
 	{ link: "/gallery", title: "Gallery" },
-	{ link: "/share-memory", title: "Share a memory" },
+	{ link: "/share-memory", title: "Share Memory" },
 ];
 
 const NavBar = ({
@@ -53,9 +53,9 @@ const NavBar = ({
 			variants={navVariants}
 			className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-opacity-50"
 		>
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="flex justify-center items-center h-16 sm:h-20">
-					<div className="flex items-center justify-center gap-2 sm:gap-8">
+			<div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+				<div className="flex justify-center items-center h-14 sm:h-16 lg:h-20">
+					<div className="flex items-center justify-center gap-1 sm:gap-4 lg:gap-8">
 						{other_pages?.map((page) => (
 							<motion.div
 								key={page.title}
@@ -67,7 +67,7 @@ const NavBar = ({
 									whileTap={{ scale: 0.95 }}
 									onClick={wrapClick(() => navigate(page.link))}
 									className={cn(
-										"text-sm sm:text-base lg:text-lg font-light tracking-wide transition-colors duration-200 px-2 py-1",
+										"text-xs sm:text-sm lg:text-lg font-light tracking-wide transition-colors duration-200 px-1 sm:px-2 py-0.5 sm:py-1",
 										linkClass,
 										pathname === page.link ? "font-normal" : "hover:font-normal"
 									)}
