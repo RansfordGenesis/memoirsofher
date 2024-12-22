@@ -106,8 +106,8 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
                   </p>
                 </div>
                 <p className="text-lg leading-relaxed mb-8 whitespace-pre-wrap break-all">
-  {memory.message}
-</p>
+                  {memory.message}
+                </p>
 
                 <div className="flex flex-wrap gap-2">
                   {memory.tags
