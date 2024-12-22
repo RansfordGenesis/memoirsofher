@@ -91,23 +91,24 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
 
             {/* Large Desktop Layout */}
             <div className="hidden xl:flex">
-              <div className="w-1/2 h-[85vh]">
+              <div className="w-1/2 min-h-[50vh]">
                 <CustomImage
                   src={memory.imageUrl}
                   alt={memory.title}
-                  className="w-full h-full object-contain bg-black/5"
+                  className="w-full h-full object-cover bg-black/5"
                 />
               </div>
               <div className="w-1/2 p-8 overflow-y-auto max-h-[85vh]">
                 <div className="mb-6">
-                  <h2 className="text-3xl font-medium mb-2">{memory.title}</h2>
+                  <h2 className="text-3xl font-medium mb-2 break-all">{memory.title}</h2>
                   <p className="text-base text-black/50">
                     Shared by {memory.author || "Anonymous"}
                   </p>
                 </div>
-                <p className="text-lg leading-relaxed mb-8 whitespace-pre-wrap">
-                  {memory.message}
-                </p>
+                <p className="text-lg leading-relaxed mb-8 whitespace-pre-wrap break-all">
+  {memory.message}
+</p>
+
                 <div className="flex flex-wrap gap-2">
                   {memory.tags
                     ?.filter((tag) => tag.trim() !== "")
