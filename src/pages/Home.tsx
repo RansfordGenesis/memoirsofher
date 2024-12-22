@@ -45,7 +45,7 @@ const HomePage = () => {
 					{titleText.split("").map((char, index) => (
 						<span
 							key={index}
-							className="inline-block font-cursive font-extralight text-[2.4rem] lg:text-[5rem] text-center "
+							className="inline-block font-cursive font-extralight text-[2.4rem] lg:text-[5rem] text-center"
 						>
 							{char === " " ? "\u00A0" : char}
 						</span>
@@ -56,7 +56,7 @@ const HomePage = () => {
 					variants={typewriterVariants}
 					initial="hidden"
 					animate="visible"
-					className="lg:text-[5rem] text-[2.5rem] text-center font-semibold uppercase leading-tight lg:leading-normal"
+					className="relative lg:text-[5rem] text-[2.5rem] text-center font-semibold uppercase leading-tight lg:leading-normal group"
 					style={{
 						textShadow: "0 0 10px rgba(255,255,255,0.3)",
 					}}
@@ -65,7 +65,10 @@ const HomePage = () => {
 						<motion.span
 							key={index}
 							variants={letterVariants}
-							className="inline-block"
+							className="inline-block relative group-hover:text-transparent text-white duration-300"
+							style={{
+								WebkitTextStroke: "1px white",
+							}}
 						>
 							{char === " " ? "\u00A0" : char}
 						</motion.span>
