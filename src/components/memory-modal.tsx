@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import CustomImage from "./shared/image";
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useEffect, useState } from "react";
 
 interface MemoryModalProps {
   isOpen: boolean;
@@ -16,12 +17,21 @@ interface MemoryModalProps {
 }
 
 const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
+  const [isLongMessage, setIsLongMessage] = useState(false);
+
+  useEffect(() => {
+    if (memory) {
+      const MESSAGE_LENGTH_THRESHOLD = 500;
+      setIsLongMessage(memory.message.length > MESSAGE_LENGTH_THRESHOLD);
+    }
+  }, [memory]);
+
   if (!memory) return null;
 
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 flex items-start sm:items-center justify-center isolate p-4"
           style={{ zIndex: 9999 }}
         >
@@ -34,7 +44,7 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             style={{ zIndex: 1 }}
           />
-          
+
           {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -56,17 +66,18 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
 
             {/* Mobile, Tablet & Medium Screens Layout */}
             <div className="h-fit xl:hidden">
-              {/* <div className="h-[40vh] md:h-[45vh] w-full"> */}
-              <div>
+              <div className="h-[40vh] md:h-[45vh] w-full">
                 <CustomImage
                   src={memory.imageUrl}
                   alt={memory.title}
-                  className="w-full h-full object-contain bg-black/5"
+                  className="w-full h-full object-cover bg-black/5"
                 />
               </div>
               <div className="p-6 md:p-8">
                 <div className="mb-6">
-                  <h2 className="text-2xl md:text-3xl font-medium mb-2 pt-3 break-all">{memory.title}</h2>
+                  <h2 className="text-2xl md:text-3xl font-medium mb-2 pt-3 break-all">
+                    {memory.title}
+                  </h2>
                   <p className="text-sm md:text-base text-black/50">
                     Shared by {memory.author || "Anonymous"}
                   </p>
@@ -90,39 +101,85 @@ const MemoryModal = ({ isOpen, onClose, memory }: MemoryModalProps) => {
             </div>
 
             {/* Large Desktop Layout */}
-            <div className="hidden xl:flex">
-              <div className="w-1/2 min-h-[50vh]">
-                <CustomImage
-                  src={memory.imageUrl}
-                  alt={memory.title}
-                  className="w-full h-full object-cover bg-black/5 "
-                />
-              </div>
-              <div className="w-1/2 p-8 overflow-y-auto max-h-[85vh]">
-                <div className="mb-6">
-                  <h2 className="text-3xl font-medium mb-2 break-all pt-4">{memory.title}</h2>
-                  <p className="text-base text-black/50">
-                    Shared by {memory.author || "Anonymous"}
-                  </p>
+            {isLongMessage ? (
+              // Vertical layout for long messages
+              <div className="hidden xl:block">
+                <div className="w-full">
+                  <CustomImage
+                    src={memory.imageUrl}
+                    alt={memory.title}
+                    className="w-full h-[80vh] object-cover bg-black/7"
+                  />
                 </div>
-                <p className="text-lg leading-relaxed mb-8 whitespace-pre-wrap break-all">
-  {memory.message}
-</p>
-
-                <div className="flex flex-wrap gap-2">
-                  {memory.tags
-                    ?.filter((tag) => tag.trim() !== "")
-                    ?.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-black/5 rounded-full text-sm"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
+                <div className="p-8">
+                  <div className="mb-6">
+                    <h2 className="text-3xl font-medium mb-2 break-all pt-4">
+                      {memory.title}
+                    </h2>
+                    <p className="text-base text-black/50">
+                      Shared by {memory.author || "Anonymous"}
+                    </p>
+                  </div>
+                  <div className="overflow-y-auto">
+                    <p className="text-lg leading-relaxed mb-8 whitespace-pre-wrap break-all">
+                      {memory.message}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {memory.tags
+                        ?.filter((tag) => tag.trim() !== "")
+                        ?.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-3 py-1 bg-black/5 rounded-full text-sm"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              // Side-by-side layout for shorter messages
+              <div className="hidden xl:flex items-start">
+                <div className="w-1/2">
+                  <CustomImage
+                    src={memory.imageUrl}
+                    alt={memory.title}
+                    className="w-full h-full object-cover bg-black/7"
+                  />
+                </div>
+                <div className="w-1/2 p-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl font-medium mb-1 break-all">
+                      {memory.title}
+                    </h2>
+                    <p className="text-sm text-black/50">
+                      Shared by {memory.author || "Anonymous"}
+                    </p>
+                  </div>
+                  <div
+                    style={{ maxHeight: "calc(100% - 60px)", overflowY: "auto" }}
+                  >
+                    <p className="text-base leading-normal mb-6 whitespace-pre-wrap break-all">
+                      {memory.message}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {memory.tags
+                        ?.filter((tag) => tag.trim() !== "")
+                        ?.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-1 bg-black/5 rounded-full text-xs"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       )}
