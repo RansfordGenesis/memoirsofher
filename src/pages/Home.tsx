@@ -1,19 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { wrapClick } from "../utils";
 import NavBar from "../components/shared/nav";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import VideoConsentModal from "@/components/video-consent-modal";
 
 const HomePage = () => {
 	const navigate = useNavigate();
-	const [orientation, setOrientation] = useState<"portrait" | "landscape">(
-		"portrait"
-	);
-	const [deviceType, setDeviceType] = useState<"mobile" | "tablet" | "desktop">(
-		"mobile"
-	);
+	const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
+	const [deviceType, setDeviceType] = useState<"mobile" | "tablet" | "desktop">("mobile");
 	const [hasConsent, setHasConsent] = useState(false);
+	const [startAnimation, setStartAnimation] = useState(false);
 	const videoRef = useRef<HTMLVideoElement>(null);
 
 	useEffect(() => {
@@ -32,7 +29,6 @@ const HomePage = () => {
 	}, []);
 
 	useEffect(() => {
-		// Pause video initially
 		if (videoRef.current) {
 			videoRef.current.pause();
 		}
@@ -44,6 +40,8 @@ const HomePage = () => {
 			videoRef.current.muted = false;
 			videoRef.current.play();
 		}
+		// Start the animation after a brief delay
+		setTimeout(() => setStartAnimation(true), 300);
 	};
 
 	const typewriterVariants = {
@@ -76,6 +74,30 @@ const HomePage = () => {
 		},
 	};
 
+	const titleTextVariants = {
+		hidden: { opacity: 0, y: 20 },
+		visible: { 
+			opacity: 1, 
+			y: 0,
+			transition: {
+				duration: 0.6,
+				delay: 0.2
+			}
+		}
+	};
+
+	const shareButtonVariants = {
+		hidden: { opacity: 0, y: 20 },
+		visible: { 
+			opacity: 1, 
+			y: 0,
+			transition: {
+				duration: 0.6,
+				delay: 1.2
+			}
+		}
+	};
+
 	const titleText = "In Loving Memory of";
 	const firstLine = ["Josephine", "Nana"];
 	const secondLine = ["Adwoa", "Asmah"];
@@ -93,10 +115,7 @@ const HomePage = () => {
 
 	const renderNames = () => {
 		// For landscape orientation on mobile and tablet
-		if (
-			orientation === "landscape" &&
-			(deviceType === "mobile" || deviceType === "tablet")
-		) {
+		if (orientation === "landscape" && (deviceType === "mobile" || deviceType === "tablet")) {
 			return (
 				<div className="flex flex-row items-center justify-center gap-4">
 					{[...firstLine, ...secondLine].map((word, wordIndex) => (
@@ -216,41 +235,50 @@ const HomePage = () => {
 				</video>
 			</div>
 
-			<div className="text-white z-50 flex items-center justify-center flex-col px-4 md:px-6 lg:gap-8 gap-6">
-				<p className="font-cursive font-extralight text-[1.8rem] md:text-[4rem] lg:text-[5.5rem] text-center">
-					{titleText.split("").map((char, index) => (
-						<span
-							key={index}
-							className="inline-block font-cursive font-extralight"
+			<AnimatePresence>
+				{(startAnimation || !hasConsent) && (
+					<div className="text-white z-50 flex items-center justify-center flex-col px-4 md:px-6 lg:gap-8 gap-6">
+						<motion.p 
+							variants={titleTextVariants}
+							initial="hidden"
+							animate={startAnimation ? "visible" : "hidden"}
+							className="font-cursive font-extralight text-[1.8rem] md:text-[4rem] lg:text-[5.5rem] text-center"
 						>
-							{char === " " ? "\u00A0" : char}
-						</span>
-					))}
-				</p>
+							{titleText.split("").map((char, index) => (
+								<span
+									key={index}
+									className="inline-block font-cursive font-extralight"
+								>
+									{char === " " ? "\u00A0" : char}
+								</span>
+							))}
+						</motion.p>
 
-				<motion.div
-					variants={typewriterVariants}
-					initial="hidden"
-					animate="visible"
-					className="flex flex-col gap-4 relative group"
-				>
-					{renderNames()}
-				</motion.div>
+						<motion.div
+							variants={typewriterVariants}
+							initial="hidden"
+							animate={startAnimation ? "visible" : "hidden"}
+							className="flex flex-col gap-4 relative group"
+						>
+							{renderNames()}
+						</motion.div>
 
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: 0.6, duration: 0.6 }}
-					className="cursor-pointer w-fit font-extralight uppercase border-[0.9px] border-[#ffffff] lg:p-6 lg:text-[1.4rem] md:p-5 md:text-[1.2rem] p-3 text-[0.9rem] hover:bg-white hover:text-black duration-700"
-					role="link"
-					whileHover={{ scale: 1.05 }}
-					onClick={wrapClick(() => {
-						navigate("/share-memory");
-					})}
-				>
-					<p>Share memory</p>
-				</motion.div>
-			</div>
+						<motion.div
+							variants={shareButtonVariants}
+							initial="hidden"
+							animate={startAnimation ? "visible" : "hidden"}
+							className="cursor-pointer w-fit font-extralight uppercase border-[0.9px] border-[#ffffff] lg:p-6 lg:text-[1.4rem] md:p-5 md:text-[1.2rem] p-3 text-[0.9rem] hover:bg-white hover:text-black duration-700"
+							role="link"
+							whileHover={{ scale: 1.05 }}
+							onClick={wrapClick(() => {
+								navigate("/share-memory");
+							})}
+						>
+							<p>Share memory</p>
+						</motion.div>
+					</div>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 };
