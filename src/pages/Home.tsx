@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { wrapClick } from "../utils";
 import NavBar from "../components/shared/nav";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import VideoConsentModal from "@/components/video-consent-modal";
 
 const HomePage = () => {
 	const navigate = useNavigate();
@@ -12,6 +13,8 @@ const HomePage = () => {
 	const [deviceType, setDeviceType] = useState<"mobile" | "tablet" | "desktop">(
 		"mobile"
 	);
+	const [hasConsent, setHasConsent] = useState(false);
+	const videoRef = useRef<HTMLVideoElement>(null);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -27,6 +30,21 @@ const HomePage = () => {
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
+
+	useEffect(() => {
+		// Pause video initially
+		if (videoRef.current) {
+			videoRef.current.pause();
+		}
+	}, []);
+
+	const handleConsent = () => {
+		setHasConsent(true);
+		if (videoRef.current) {
+			videoRef.current.muted = false;
+			videoRef.current.play();
+		}
+	};
 
 	const typewriterVariants = {
 		hidden: { opacity: 0 },
@@ -182,13 +200,14 @@ const HomePage = () => {
 
 	return (
 		<div className="h-screen w-screen bg-black relative overflow-clip grid place-content-center">
+			{!hasConsent && <VideoConsentModal onAccept={handleConsent} />}
 			<NavBar />
 			<div className="w-full h-full absolute left-0 right-0 top-0 grid place-content-center z-0">
 				<div className="w-full h-full bg-black/[0.6] absolute left-0 right-0 top-0 backdrop-blur-[2px]"></div>
 				<video
-					autoPlay
+					ref={videoRef}
 					loop
-					// muted
+					muted
 					playsInline
 					className="w-full h-full object-cover absolute top-0 left-0"
 				>
