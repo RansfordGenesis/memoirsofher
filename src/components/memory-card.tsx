@@ -24,6 +24,12 @@ const MemoryCard = ({
     setIsModalOpen(true);
   };
 
+  function truncateMessage(message: string, limit: number) {
+    const words = message.trim().split(/\s+/);
+    return words.length > limit ? words.slice(0, limit).join(" ") : message;
+  }
+
+  const truncatedMessage = truncateMessage(message, 10);
 
   return (
     <>
@@ -47,8 +53,9 @@ const MemoryCard = ({
         <div className="border-black/10 border-[1.2px] rounded-b-xl shadow-sm px-3 py-2">
           <p className="text-[0.86rem] text-black/50 font-normal">{author}</p>
           <h4 className="text-[0.98rem] font-light text-black/90">{title}</h4>
-          <p className="font-extralight text-[0.87rem] text-black/95 mb-6 line-clamp-3">
-            {message}
+          <p className="font-extralight text-[0.87rem] text-black/95 mb-2 line-clamp-3">
+            {truncatedMessage}
+            {message.trim().split(/\s+/).length > 10 && "..."}
           </p>
 
           <div className="flex flex-wrap items-center gap-2">
