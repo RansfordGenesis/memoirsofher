@@ -22,6 +22,9 @@ const MemoriesPage = () => {
 
 	const loader = useRef<HTMLDivElement | null>(null);
 
+	const BATCH_SIZE = 100; // Increased from 50
+	const PREFETCH_THRESHOLD = 0.5; // Start loading when 50% through current batch
+
 	// Modify fetchAllMemories to handle initial and subsequent loads
 	async function fetchAllMemories(page: number) {
 		if (page === 1) {
@@ -34,11 +37,18 @@ const MemoriesPage = () => {
 			.from("memory")
 			.select()
 			.order("created_at", { ascending: false })
-			.range((page - 1) * 50, page * 50 - 1);
+			.range((page - 1) * BATCH_SIZE, page * BATCH_SIZE - 1);
 
 		if (!error) {
-			setData(prev => [...prev, ...(Memories as CardData[])]);
-			if (Memories.length < 50) setHasMore(false);
+			setData(prev => {
+				const newData = [...prev, ...(Memories as CardData[])];
+				// Prefetch next batch
+				if (Memories.length === BATCH_SIZE) {
+					prefetchNextBatch(page + 1);
+				}
+				return newData;
+			});
+			if (Memories.length < BATCH_SIZE) setHasMore(false);
 		}
 
 		if (page === 1) {
@@ -47,6 +57,19 @@ const MemoriesPage = () => {
 			setIsLoadingMore(false);
 		}
 	}
+
+	const prefetchNextBatch = async (nextPage: number) => {
+		const { data: nextBatch } = await supabaseClient
+			.from("memory")
+			.select()
+			.order("created_at", { ascending: false })
+			.range(nextPage * BATCH_SIZE, (nextPage + 1) * BATCH_SIZE - 1);
+			
+		// Cache the results (optional)
+		if (nextBatch) {
+			sessionStorage.setItem(`memories-page-${nextPage}`, JSON.stringify(nextBatch));
+		}
+	};
 
 	// Update useEffect to fetch the first page
 	useEffect(() => {
@@ -71,8 +94,8 @@ const MemoriesPage = () => {
 			},
 			{
 				root: null,
-				rootMargin: "20px",
-				threshold: 1.0,
+				rootMargin: "100px", // Increased from 20px
+				threshold: PREFETCH_THRESHOLD,
 			}
 		);
 
