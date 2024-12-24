@@ -3,6 +3,7 @@ import CustomImage from "./shared/image";
 import MemoryModal from "./memory-modal";
 
 interface IProps {
+  id?: string;
   author?: string;
   message: string;
   tags: string[];

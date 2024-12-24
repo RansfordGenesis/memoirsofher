@@ -1,5 +1,5 @@
 import { supabaseClient } from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ParallaxScroll } from "@/components/ui/parallax-scroll";
 import MemoryCard from "@/components/memory-card";
 import { CardData } from "@/utils/schema";
@@ -11,66 +11,114 @@ import { useMemoryFiltering } from "@/hooks/useMemoryFiltering";
 const MemoriesPage = () => {
 	const [data, setData] = useState<CardData[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
 	const { selectedTags, filteredMemories, allTags, handleTagSelect } =
 		useMemoryFiltering(data);
 
-	async function fetchAllMemories() {
-		setLoading(true);
+	// Add pagination state
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [hasMore, setHasMore] = useState<boolean>(true);
+
+	const loader = useRef<HTMLDivElement | null>(null);
+
+	// Modify fetchAllMemories to handle initial and subsequent loads
+	async function fetchAllMemories(page: number) {
+		if (page === 1) {
+			setLoading(true);
+		} else {
+			setIsLoadingMore(true);
+		}
+
 		const { data: Memories, error } = await supabaseClient
 			.from("memory")
 			.select()
 			.order("created_at", { ascending: false })
-			.limit(50);
+			.range((page - 1) * 50, page * 50 - 1);
 
 		if (!error) {
-			setData(Memories as CardData[]);
+			setData(prev => [...prev, ...(Memories as CardData[])]);
+			if (Memories.length < 50) setHasMore(false);
 		}
-		setLoading(false);
+
+		if (page === 1) {
+			setLoading(false);
+		} else {
+			setIsLoadingMore(false);
+		}
 	}
 
+	// Update useEffect to fetch the first page
 	useEffect(() => {
-		fetchAllMemories();
-	}, []);
+		fetchAllMemories(currentPage);
+	}, [currentPage]);
+
+	// Add load more function
+	const loadMore = () => {
+		if (hasMore && !loading) {
+			setCurrentPage(prev => prev + 1);
+		}
+	};
+
+	useEffect(() => {
+		if (loading || isLoadingMore || !hasMore) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting) {
+					loadMore();
+				}
+			},
+			{
+				root: null,
+				rootMargin: "20px",
+				threshold: 1.0,
+			}
+		);
+
+		if (loader.current) {
+			observer.observe(loader.current);
+		}
+
+		return () => {
+			if (loader.current) {
+				observer.unobserve(loader.current);
+			}
+		};
+	}, [loading, isLoadingMore, hasMore]);
 
 	const containerVariants = {
 		hidden: {
 			opacity: 0,
-			y: 5, // Reduced from 10
+			transition: { duration: 0.5 }
 		},
 		visible: {
 			opacity: 1,
-			y: 0,
 			transition: {
-				when: "beforeChildren",
-				staggerChildren: 0.05, // Reduced from 0.1
-				delayChildren: 0, // Removed delay
-				duration: 0.15, // Reduced from 0.2
+				staggerChildren: 0.15,
+				delayChildren: 0.1,
+				duration: 0.6,
+				ease: "easeOut"
 			}
-		},
-		exit: {
-			opacity: 0,
-			transition: {
-				duration: 0.1, // Reduced from 0.2
-			},
 		}
 	};
 
 	const itemVariants = {
 		hidden: {
-			y: 15, // Reduced from 30
 			opacity: 0,
-			scale: 0.95 // Increased from 0.3 for subtler scale
+			y: 40,
+			scale: 0.98
 		},
 		visible: {
-			y: 0,
 			opacity: 1,
+			y: 0,
 			scale: 1,
 			transition: {
 				type: "spring",
-				stiffness: 300, // Increased from 200
-				damping: 20, // Increased for faster settling
-				duration: 0.3 // Reduced from 0.5
+				stiffness: 50,
+				damping: 20,
+				mass: 1,
+				duration: 0.8
 			}
 		}
 	};
@@ -83,13 +131,13 @@ const MemoriesPage = () => {
 				onTagSelect={handleTagSelect}
 			/>
 			<div className="w-full overflow-hidden">
-				<AnimatePresence mode="sync"> {/* Changed from "wait" */}
+				<AnimatePresence mode="sync">
 					{!loading && (
 						<motion.div
-							key={filteredMemories.length} 
+							key="gallery-container"
 							initial="hidden"
 							animate="visible"
-							exit="exit"
+							exit="hidden"
 							variants={containerVariants}
 							className="w-full relative overflow-visible"
 						>
@@ -97,7 +145,19 @@ const MemoriesPage = () => {
 								className="w-full h-full overflow-visible"
 								cards={filteredMemories}
 								component={(item) => (
-									<motion.div variants={itemVariants}>
+									<motion.div 
+										key={`${item.title}-${item.message.substring(0, 10)}`}
+										variants={itemVariants}
+										layout="position"
+										initial="hidden"
+										animate="visible"
+										exit="hidden"
+										whileHover={{ 
+											scale: 1.01,
+											transition: { duration: 0.4 }
+										}}
+										whileTap={{ scale: 0.99 }}
+									>
 										<MemoryCard
 											tags={item.tags}
 											title={item.title}
@@ -111,6 +171,7 @@ const MemoriesPage = () => {
 						</motion.div>
 					)}
 				</AnimatePresence>
+				<div ref={loader} />
 			</div>
 		</SharedLayout>
 	);
