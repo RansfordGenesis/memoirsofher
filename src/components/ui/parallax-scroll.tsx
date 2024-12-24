@@ -37,7 +37,7 @@ export const ParallaxScroll = <T,>({
   );
 
   return (
-    <div className={cn("h-full items-start w-full", className)} ref={gridRef}>
+    <div className={cn("h-full items-start w-full pb-[40vh]", className)} ref={gridRef}>
       <div className="hidden lg:grid lg:grid-cols-4 items-start w-full mx-auto gap-2 py-8 lg:py-4">
         {desktopColumns.map((columnCards, idx) => (
           <motion.div
